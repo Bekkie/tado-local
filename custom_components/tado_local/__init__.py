@@ -125,6 +125,7 @@ def handle_event(coordinator: DataUpdateCoordinator, event: dict):
     current_data = coordinator.data
     zones_list = current_data.get("zones", [])
     devices_list = current_data.get("devices", [])
+    status_info = current_data.get("status", None)
     updated = False
 
     if event_type == "zone":
@@ -152,7 +153,8 @@ def handle_event(coordinator: DataUpdateCoordinator, event: dict):
     if updated:
         coordinator.async_set_updated_data({
             "zones": zones_list,
-            "devices": devices_list
+            "devices": devices_list,
+            "status": status_info
         })
 
 async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
