@@ -77,6 +77,14 @@
       "battery_low": {
         "name": "Batteria"
       }
+    },
+    "text": {
+      "window_open_timeout": {
+        "name": "Timeout di apertura della finestra"
+      },
+      "window_rest_timeout": {
+        "name": "Timeout di riposo della finestra"
+      }
     }
   },
   "services": {

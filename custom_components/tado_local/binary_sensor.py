@@ -23,6 +23,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry, async_add_e
     zones = coordinator.data.get("zones", [])
     for zone in zones:
         entities.append(TadoZoneHeating(coordinator, zone))
+        entities.append(TadoZoneOpenWindow(coordinator, zone))
         
     devices = coordinator.data.get("devices", [])
     for device in devices:
@@ -49,10 +50,12 @@ class TadoZoneHeating(CoordinatorEntity, BinarySensorEntity):
         self._zone_id = zone_data.get("zone_id") or zone_data.get("id")
         self._zone_name = zone_data.get("name")
         self._attr_unique_id = f"tado_local_heating_{self._zone_id}"
+        self._tado_zone_id = zone_data.get("tado_zone_id", "")
 
     @property
     def device_info(self):
         return {
+            "configuration_url": f"https://app.tado.com/en/main/home/zoneV2/{self._tado_zone_id}/",
             "identifiers": {(DOMAIN, "zone", self._zone_id)},
             "name": self._zone_name,
             "manufacturer": MANUFACTURER,
@@ -68,6 +71,39 @@ class TadoZoneHeating(CoordinatorEntity, BinarySensorEntity):
                 state = zone.get("state", zone)
                 val = state.get("cur_heating", 0)
                 return val > 0
+        return False
+
+
+class TadoZoneOpenWindow(CoordinatorEntity, BinarySensorEntity):
+    _attr_device_class = BinarySensorDeviceClass.WINDOW
+    _attr_has_entity_name = True
+    _attr_translation_key = "open_window"
+
+    def __init__(self, coordinator, zone_data):
+        super().__init__(coordinator)
+        self._zone_id = zone_data.get("zone_id") or zone_data.get("id")
+        self._zone_name = zone_data.get("name")
+        self._attr_unique_id = f"tado_local_window_{self._zone_id}"
+        self._tado_zone_id = zone_data.get("tado_zone_id", "")
+
+    @property
+    def device_info(self):
+        return {
+            "configuration_url": f"https://app.tado.com/en/main/home/zoneV2/{self._tado_zone_id}/",
+            "identifiers": {(DOMAIN, "zone", self._zone_id)},
+            "name": self._zone_name,
+            "manufacturer": MANUFACTURER,
+            "model": format_model("zone_control"),
+        }
+
+    @property
+    def is_on(self):
+        zones = self.coordinator.data.get("zones", [])
+        for zone in zones:
+            zid = zone.get("zone_id") or zone.get("id")
+            if zid == self._zone_id:
+                state = zone.get("state", zone)
+                return state.get("window_open", False)
         return False
 
 
@@ -91,13 +127,17 @@ class TadoDeviceBattery(CoordinatorEntity, BinarySensorEntity):
             via_device = (DOMAIN, "zone", zone_id)
 
         raw_model = device_data.get("device_type", "Device")
+        raw_model += (" " + device_data.get("model")) or ""
+        sw_version = device_data.get("firmware_version", None) 
 
         self._device_info_data = {
+            "configuration_url": f"https://app.tado.com/en/main/settings/home/rooms-and-devices/device/{self._serial}",
             "identifiers": {(DOMAIN, "device", self._device_id)},
             "name": f"Tado {self._serial}",
             "manufacturer": MANUFACTURER,
             "model": format_model(raw_model),
             "via_device": via_device,
+            "sw_version": sw_version,
             "serial_number": self._serial
         }
 

@@ -77,6 +77,14 @@
       "battery_low": {
         "name": "Batterij"
       }
+    },
+    "text": {
+      "window_open_timeout": {
+        "name": "Raam Open tijd"
+      },
+      "window_rest_timeout": {
+        "name": "Raam Rust tijd"
+      }
     }
   },
   "services": {

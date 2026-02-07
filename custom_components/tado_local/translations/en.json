@@ -77,6 +77,14 @@
       "battery_low": {
         "name": "Battery"
       }
+    },
+    "text": {
+      "window_open_timeout": {
+        "name": "Window Open Timeout"
+      },
+      "window_rest_timeout": {
+        "name": "Window Rest Timeout"
+      }
     }
   },
   "services": {
