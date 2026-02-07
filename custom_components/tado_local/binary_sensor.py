@@ -70,7 +70,8 @@ class TadoZoneHeating(CoordinatorEntity, BinarySensorEntity):
             if zid == self._zone_id:
                 state = zone.get("state", zone)
                 val = state.get("cur_heating", 0)
-                return val > 0
+                # cur_heating can be 0=off, 1=heating, 2=cooling
+                return val == 1
         return False
 
 
