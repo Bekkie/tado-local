@@ -81,6 +81,13 @@ This project is licensed under the MIT License.
 
 ## 📌 Changelog
 
+### v1.1.0
+- **New**:Home Assistant services (stop all zones from heating, resume heating in all zones).
+- **New**:Server info panel.
+- **New**:Dutch and german language files.
+
+Thanks to @Bekkie and @TomSuperHero124
+
 ### v1.0.3
 - **New**: Change settings after first configuration.
 - **Improved**: Added temperature and target temperature sensors.
