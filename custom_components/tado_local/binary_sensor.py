@@ -17,6 +17,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry, async_add_e
     """Configura i sensori binari Tado Local."""
     data = hass.data[DOMAIN][entry.entry_id]
     coordinator = data["coordinator"]
+    base_url = data["base_url"]
     
     entities = []
     
@@ -32,7 +33,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry, async_add_e
             # Add TadoLocal status fields to MASTER_DEVICE (internet bridge) entity
             entities.append(TadoBridgeConnected(coordinator, device))
             entities.append(TadoCloudEnbled(coordinator, device))
-            entities.append(TadoCloudAuthtenticated(coordinator, device))
+            entities.append(TadoCloudAuthtenticated(coordinator, device, base_url))
         else:
             # The internet bridge does not have a battery
             entities.append(TadoDeviceBattery(coordinator, device))
@@ -218,12 +219,14 @@ class TadoCloudAuthtenticated(CoordinatorEntity, BinarySensorEntity):
     _attr_icon = "mdi:cloud-key"
     _attr_translation_key = "cloud_api_authenticated"
 
-    def __init__(self, coordinator, device_data):
+    def __init__(self, coordinator, device_data, base_url):
         super().__init__(coordinator)
         self._device_id = device_data.get("device_id") or device_data.get("id")
         self._attr_unique_id = f"tado_local_auth{self._device_id}"
+        self._base_url = base_url
         self._device_info_data = {
-            "identifiers": {(DOMAIN, "device", self._device_id)}
+            "identifiers": {(DOMAIN, "device", self._device_id)},
+            "configuration_url": self._base_url
         }
 
     @property
