@@ -22,7 +22,7 @@ Unlike the standard integration, **this component does not rely on Tado Cloud**.
   - **Sensors**: Humidity levels and Serial Numbers for devices.
   - **Binary Sensors**: Heating Active status and Low Battery warnings.
 - **Device Discovery**: Automatically maps physical devices (Thermostats, Valves) and logical Zones.
-- **Multi-Language**: Fully localized in English and Italian.
+- **Multi-Language**: Fully localized in English, Italian, Dutch and German.
 
 ## 🛠 Prerequisites
 Before installing this integration, you **must** have the **TadoLocal** service running on your network (e.g., via Docker).
@@ -82,9 +82,9 @@ This project is licensed under the MIT License.
 ## 📌 Changelog
 
 ### v1.1.0
-- **New**:Home Assistant services (stop all zones from heating, resume heating in all zones).
-- **New**:Server info panel.
-- **New**:Dutch and german language files.
+- **New**: Home Assistant services (stop all zones from heating, resume heating in all zones).
+- **New**: Server info panel.
+- **New**: Dutch and German language files.
 
 Thanks to @Bekkie and @TomSuperHero124
 
